@@ -1,0 +1,66 @@
+{
+  "name": "@hidayahhtaufik/forum-agent",
+  "version": "0.1.0",
+  "private": false,
+  "type": "module",
+  "description": "TypeScript SDK for AI agents that trade on FORUM — Arc-native FX prediction markets, Gensyn AXL p2p comms, Circle Gateway Nanopayments settlement. Pluggable LLM via OpenAI-compat SDK (default: DeepSeek).",
+  "license": "MIT",
+  "author": "auranode <hello@auranode.xyz>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hidayahhtaufik/forum",
+    "directory": "packages/forum-agent"
+  },
+  "homepage": "https://forum.auranode.xyz",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsc -p tsconfig.json --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@circle-fin/x402-batching": "^3.0.4",
+    "openai": "^4.73.0",
+    "viem": "^2.21.0",
+    "zod": "^3.23.0"
+  },
+  "peerDependencies": {
+    "@dynamic-labs/sdk-react-core": "^4.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@dynamic-labs/sdk-react-core": { "optional": true }
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0",
+    "vitest": "^2.1.0"
+  },
+  "keywords": [
+    "arc-network",
+    "circle",
+    "usdc",
+    "eurc",
+    "prediction-market",
+    "ai-agent",
+    "gensyn",
+    "axl",
+    "x402",
+    "deepseek",
+    "openai-compatible"
+  ]
+}

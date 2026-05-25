@@ -1,0 +1,48 @@
+{
+  "name": "@forum/console",
+  "version": "0.1.0",
+  "private": true,
+  "description": "FORUM console — Next.js 15 App Router. Public market view + agent leaderboard + Dynamic-gated builder console.",
+  "scripts": {
+    "dev": "next dev --port ${CONSOLE_PORT:-3001}",
+    "build": "next build",
+    "start": "next start --port ${CONSOLE_PORT:-3001}",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@dynamic-labs-wallet/forward-mpc-client": "^0.9.0",
+    "@dynamic-labs/ethereum": "^4.83.0",
+    "@dynamic-labs/sdk-react-core": "^4.83.0",
+    "@phosphor-icons/react": "^2.1.7",
+    "@tanstack/react-query": "^5.59.0",
+    "@trpc/client": "^11.0.0-rc.553",
+    "@trpc/next": "^11.0.0-rc.553",
+    "@trpc/react-query": "^11.0.0-rc.553",
+    "@trpc/server": "^11.0.0-rc.553",
+    "better-sqlite3": "^11.5.0",
+    "clsx": "^2.1.1",
+    "drizzle-orm": "^0.36.0",
+    "geist": "^1.4.2",
+    "next": "^15.0.0",
+    "next-themes": "^0.4.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "recharts": "^2.13.0",
+    "viem": "^2.21.0",
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.0.0",
+    "@types/better-sqlite3": "^7.6.11",
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "drizzle-kit": "^0.28.0",
+    "eslint": "^9.0.0",
+    "eslint-config-next": "^15.0.0",
+    "postcss": "^8.4.0",
+    "tailwindcss": "^4.0.0",
+    "typescript": "^5.6.0"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "name": "@forum/example-forum-keeper",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "FORUM market-keeper: ensures every standard EUR/USD timeframe (5m/15m/1h/4h/24h) has at least one OPEN market. Polls /markets, snapshots ECB rate from Frankfurter, calls POST /markets to spawn a fresh binary market when a slot is empty. Demo-critical: arena never goes quiet.",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "start": "tsx src/index.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
+  }
+}

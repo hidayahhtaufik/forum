@@ -1,0 +1,57 @@
+# Foundry compiler files
+contracts/cache/
+contracts/out/
+contracts/broadcast/*/31337/
+contracts/broadcast/**/dry-run/
+
+# Foundry-generated docs
+docs/book/
+
+# Node / workspaces
+node_modules/
+*.log
+.pnpm-debug.log*
+.npm/
+
+# Build output
+dist/
+build/
+.next/
+out/
+*.tsbuildinfo
+
+# Drizzle
+drizzle/.cache/
+
+# Env
+.env
+.env.*
+!.env.example
+
+# Editor / OS
+.DS_Store
+*.save
+*.bak
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Coverage
+coverage/
+*.lcov
+
+# Runtime / temp
+.logs/
+.ignore/
+tmp/
+logs/
+
+# Local databases (SQLite + WAL/SHM journals + dev variants)
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal

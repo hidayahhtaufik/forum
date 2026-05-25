@@ -1,0 +1,534 @@
+@import "tailwindcss";
+
+/* ============================================================
+   FORUM design tokens — read DESIGN.md for the why.
+   OKLCH throughout. All colors are theme-aware via [data-theme].
+   The pre-hydration script in layout.tsx sets data-theme before React
+   mounts so no flash on first paint.
+   ============================================================ */
+
+:root {
+  /* Brand accents — share across themes (slight adjustments per theme below). */
+  --color-honos-gold:        oklch(78% 0.14 85);
+  --color-honos-gold-dim:    oklch(55% 0.1  85);
+  --color-tessera-oxblood:   oklch(58% 0.18 25);
+  --color-aureus-ink:        oklch(62% 0.13 240);
+  --color-outcome-yes:       oklch(68% 0.16 145);
+  --color-outcome-no:        oklch(64% 0.18 25);
+
+  /* Always-dark text on gold backgrounds (connect button, etc.). Anchored to
+     near-black so contrast stays AA in both themes. */
+  --color-on-gold:           oklch(15% 0.01 80);
+
+  /* Soft pastel rainbow palette — for agent chips, mood badges, sprites later.
+     Same hue family in both themes; the surrounding bg shifts contrast. */
+  --color-pastel-pink:       oklch(88% 0.06 0);
+  --color-pastel-peach:      oklch(88% 0.07 50);
+  --color-pastel-sun:        oklch(91% 0.10 95);
+  --color-pastel-mint:       oklch(88% 0.07 155);
+  --color-pastel-sky:        oklch(88% 0.06 230);
+  --color-pastel-lavender:   oklch(86% 0.07 290);
+
+  /* Typography */
+  --font-display: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, "Menlo", monospace;
+
+  --text-2xs: 11px;
+  --text-xs: 12px;
+  --text-sm: 14px;
+  --text-base: 16px;
+  --text-lg: 20px;
+  --text-xl: 28px;
+  --text-2xl: 40px;
+  --text-3xl: 64px;
+
+  /* Motion */
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --duration-snap: 150ms;
+  --duration-default: 250ms;
+  --duration-signature: 350ms;
+}
+
+/* ----- Default `:root` = LIGHT theme (Bahama tropical paper).
+   `[data-theme="dark"]` is an OPT-IN override for users who want a
+   night-island vibe. Pages render light by default, switch via toggle. ----- */
+:root,
+:root[data-theme="light"] {
+  color-scheme: light;
+
+  --color-ground:      oklch(96% 0.035 180);
+  --color-bg:          oklch(96% 0.035 180);
+  --color-raised:      oklch(98.5% 0.022 180);
+  --color-border:      oklch(82% 0.045 185);
+  --color-bone:        oklch(36% 0.10 195);
+  --color-bone-dim:    oklch(52% 0.08 195);
+  --color-bone-faint:  oklch(68% 0.06 195);
+
+  --color-honos-gold:      oklch(68% 0.18 28);
+  --color-honos-gold-dim:  oklch(56% 0.15 28);
+  --color-tessera-oxblood: oklch(52% 0.20 22);
+  --color-aureus-ink:      oklch(48% 0.14 215);
+  --color-outcome-yes:     oklch(58% 0.16 165);
+  --color-outcome-no:      oklch(60% 0.20 28);
+
+  --color-pastel-pink:     oklch(82% 0.13 0);
+  --color-pastel-peach:    oklch(84% 0.14 50);
+  --color-pastel-sun:      oklch(86% 0.16 95);
+  --color-pastel-mint:     oklch(82% 0.14 165);
+  --color-pastel-sky:      oklch(82% 0.13 220);
+  --color-pastel-lavender: oklch(82% 0.13 290);
+}
+
+/* Dark theme — opt-in night-island. Same palette hues, darker surfaces. */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --color-ground:      oklch(18% 0.025 205);
+  --color-bg:          oklch(18% 0.025 205);
+  --color-raised:      oklch(24% 0.030 205);
+  --color-border:      oklch(34% 0.035 205);
+  --color-bone:        oklch(92% 0.025 175);
+  --color-bone-dim:    oklch(72% 0.035 180);
+  --color-bone-faint:  oklch(54% 0.030 190);
+
+  --color-honos-gold:      oklch(74% 0.16 30);
+  --color-honos-gold-dim:  oklch(60% 0.13 30);
+  --color-tessera-oxblood: oklch(58% 0.20 22);
+  --color-aureus-ink:      oklch(72% 0.13 215);
+  --color-outcome-yes:     oklch(68% 0.16 165);
+  --color-outcome-no:      oklch(70% 0.20 28);
+
+  --color-pastel-pink:     oklch(72% 0.15 0);
+  --color-pastel-peach:    oklch(74% 0.16 50);
+  --color-pastel-sun:      oklch(76% 0.18 95);
+  --color-pastel-mint:     oklch(72% 0.16 165);
+  --color-pastel-sky:      oklch(72% 0.15 220);
+  --color-pastel-lavender: oklch(72% 0.15 290);
+}
+
+/* ----- Light theme — Bahama-Bucks tropical paper (default) -----
+   Mint cream surface, deep-teal text, coral primary CTA. Inspired by
+   bahamabucks.com — playful, energetic, organic curves. The mint chroma
+   reads as 'FORUM tropical FX agora' on first paint vs generic startup
+   white. Token names from v0 (honos-gold, aureus-ink) are preserved for
+   back-compat; their VALUES now produce coral + ocean-teal respectively.
+*/
+:root[data-theme="light"] {
+  color-scheme: light;
+
+  --color-ground:      oklch(96% 0.035 180);
+  --color-bg:          oklch(96% 0.035 180);
+  --color-raised:      oklch(98.5% 0.022 180);
+  --color-border:      oklch(82% 0.045 185);
+  /* Text is deep teal, NOT black — that's the Bahama brand voice */
+  --color-bone:        oklch(36% 0.10 195);
+  --color-bone-dim:    oklch(52% 0.08 195);
+  --color-bone-faint:  oklch(68% 0.06 195);
+
+  /* CTA accent: warm coral, not gold. Same token name preserved so we
+     don't have to rename every callsite — colour just shifts to coral. */
+  --color-honos-gold:      oklch(68% 0.18 28);   /* coral */
+  --color-honos-gold-dim:  oklch(56% 0.15 28);
+  --color-tessera-oxblood: oklch(52% 0.20 22);
+  /* Secondary accent: deep ocean teal for links + secondary CTAs */
+  --color-aureus-ink:      oklch(48% 0.14 215);
+  --color-outcome-yes:     oklch(58% 0.16 165);   /* mint-leaning green */
+  --color-outcome-no:      oklch(60% 0.20 28);    /* matches coral hue */
+
+  /* Pastel palette — vivid enough that agent sprites read as distinct
+     characters on the mint surface. Hue tuned to harmonize with teal. */
+  --color-pastel-pink:     oklch(82% 0.13 0);
+  --color-pastel-peach:    oklch(84% 0.14 50);
+  --color-pastel-sun:      oklch(86% 0.16 95);
+  --color-pastel-mint:     oklch(82% 0.14 165);
+  --color-pastel-sky:      oklch(82% 0.13 220);
+  --color-pastel-lavender: oklch(82% 0.13 290);
+}
+
+/* Expose tokens to Tailwind v4's @theme so utility classes still resolve.
+   We re-declare the names (Tailwind reads the var(...) reference, not the
+   constant value, so theme switches at runtime via the :root selectors above
+   propagate to bg-ground / text-bone / etc. without re-building). */
+@theme {
+  --color-ground: var(--color-ground);
+  --color-bg: var(--color-bg);
+  --color-raised: var(--color-raised);
+  --color-border: var(--color-border);
+  --color-bone: var(--color-bone);
+  --color-bone-dim: var(--color-bone-dim);
+  --color-bone-faint: var(--color-bone-faint);
+  --color-honos-gold: var(--color-honos-gold);
+  --color-honos-gold-dim: var(--color-honos-gold-dim);
+  --color-tessera-oxblood: var(--color-tessera-oxblood);
+  --color-aureus-ink: var(--color-aureus-ink);
+  --color-outcome-yes: var(--color-outcome-yes);
+  --color-outcome-no: var(--color-outcome-no);
+  --color-pastel-pink: var(--color-pastel-pink);
+  --color-pastel-peach: var(--color-pastel-peach);
+  --color-pastel-sun: var(--color-pastel-sun);
+  --color-pastel-mint: var(--color-pastel-mint);
+  --color-pastel-sky: var(--color-pastel-sky);
+  --color-pastel-lavender: var(--color-pastel-lavender);
+  --color-on-gold: var(--color-on-gold);
+
+  --font-display: var(--font-display);
+  --font-mono: var(--font-mono);
+  --text-2xs: var(--text-2xs);
+  --text-xs: var(--text-xs);
+  --text-sm: var(--text-sm);
+  --text-base: var(--text-base);
+  --text-lg: var(--text-lg);
+  --text-xl: var(--text-xl);
+  --text-2xl: var(--text-2xl);
+  --text-3xl: var(--text-3xl);
+}
+
+/* ============================================================
+   Base layer
+   ============================================================ */
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    background-color: var(--color-ground);
+    color: var(--color-bone);
+    font-family: var(--font-display);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    /* Smooth theme swap — no jank on toggle. */
+    transition:
+      background-color var(--duration-default) var(--ease-out-quart),
+      color var(--duration-default) var(--ease-out-quart);
+  }
+
+  body {
+    margin: 0;
+    min-height: 100dvh;
+    font-size: var(--text-sm);
+    line-height: 1.55;
+  }
+
+  /* Mono everywhere numbers and addresses live. */
+  code,
+  kbd,
+  samp,
+  pre,
+  .mono {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Default link style — subtle, used inline. */
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  a.link {
+    color: var(--color-aureus-ink);
+    transition: color var(--duration-snap) var(--ease-out-quart);
+  }
+
+  a.link:hover {
+    color: var(--color-bone);
+  }
+
+  /* Focus rings — visible without being decorative. */
+  :focus-visible {
+    outline: 2px solid var(--color-honos-gold);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  /* Selection color uses gold (matches the brand accent without overwhelming). */
+  ::selection {
+    background-color: oklch(78% 0.14 85 / 0.25);
+    color: var(--color-bone);
+  }
+
+  /* Tabular nums on every number container. */
+  table,
+  td,
+  th {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* ============================================================
+   Utilities (Tailwind v4 is class-driven but a few semantic shorthands help.)
+   ============================================================ */
+
+@utility text-2xs {
+  font-size: var(--text-2xs);
+  line-height: 1.4;
+}
+
+@utility text-3xl-display {
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+}
+
+@utility hairline-top {
+  border-top: 1px solid var(--color-border);
+}
+
+@utility hairline-bottom {
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* ============================================================
+   Card-lift — hover effect for clickable cards. Subtle scale +
+   translate with a soft drop shadow that responds to the pastel
+   palette. Bragg + Wantedfornothing pattern.
+   ============================================================ */
+@utility card-lift {
+  transition:
+    transform 220ms var(--ease-out-quart),
+    box-shadow 220ms var(--ease-out-quart),
+    border-color 220ms var(--ease-out-quart);
+
+  &:hover {
+    transform: translateY(-3px);
+    border-color: color-mix(in oklch, var(--color-honos-gold) 30%, var(--color-border));
+    box-shadow:
+      0 4px 12px color-mix(in oklch, var(--color-bone) 8%, transparent),
+      0 1px 3px color-mix(in oklch, var(--color-bone) 6%, transparent);
+  }
+}
+
+/* ============================================================
+   Section divider — a soft pastel gradient band, 80px tall, between
+   major sections on landing. Used as a visual breath between Hero,
+   HowItWorks, Leaderboard, etc.
+   ============================================================ */
+@utility section-divider {
+  height: 80px;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    color-mix(in oklch, var(--color-pastel-mint) 30%, transparent) 50%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+/* ============================================================
+   Motion utilities — Bahama Bucks playful vibe. Use sparingly: motion
+   is a spice, not a meal. Each respects prefers-reduced-motion.
+   ============================================================ */
+
+@utility float-soft {
+  animation: float-soft 4.5s ease-in-out infinite;
+}
+@utility wiggle-soft {
+  animation: wiggle-soft 6s ease-in-out infinite;
+}
+@utility drift-slow {
+  animation: drift-slow 18s ease-in-out infinite;
+}
+@utility pop-in {
+  animation: pop-in 600ms var(--ease-out-quart) backwards;
+}
+
+@keyframes float-soft {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-8px); }
+}
+@keyframes wiggle-soft {
+  0%, 100% { transform: rotate(-2deg); }
+  50%      { transform: rotate(2deg); }
+}
+@keyframes drift-slow {
+  0%, 100% { transform: translateX(0) translateY(0); }
+  25%      { transform: translateX(8px) translateY(-4px); }
+  50%      { transform: translateX(0) translateY(-8px); }
+  75%      { transform: translateX(-8px) translateY(-4px); }
+}
+@keyframes pop-in {
+  0%   { opacity: 0; transform: scale(0.92) translateY(8px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* ============================================================
+   Decorative confetti dots — scattered red + teal pin-points in the
+   background. Anchor as an absolutely-positioned pseudo-element on
+   any section. Pure CSS, no DOM nodes.
+   ============================================================ */
+@utility confetti-bg {
+  position: relative;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background-image:
+      radial-gradient(circle at 8% 18%,  color-mix(in oklch, var(--color-honos-gold) 70%, transparent) 0 3px, transparent 4px),
+      radial-gradient(circle at 92% 12%, color-mix(in oklch, var(--color-bone) 30%, transparent) 0 2.5px, transparent 4px),
+      radial-gradient(circle at 22% 88%, color-mix(in oklch, var(--color-honos-gold) 60%, transparent) 0 2px, transparent 3px),
+      radial-gradient(circle at 78% 78%, color-mix(in oklch, var(--color-bone) 25%, transparent) 0 2.5px, transparent 4px),
+      radial-gradient(circle at 50% 35%, color-mix(in oklch, var(--color-honos-gold) 50%, transparent) 0 2px, transparent 3px);
+  }
+}
+
+/* ============================================================
+   Motion respect
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ============================================================
+   Dynamic.xyz widget overrides — match island/Bahama palette.
+   Dynamic exposes CSS variables (--dynamic-*) for theme tokens, so we
+   re-map them to our existing palette. The widget then auto-themes to
+   match the rest of the page without us touching shadow DOM.
+   ============================================================ */
+:root[data-theme="light"],
+:root[data-theme="dark"] {
+  /* Surfaces */
+  --dynamic-base-1: var(--color-raised);
+  --dynamic-base-2: var(--color-bg);
+  --dynamic-base-3: var(--color-border);
+  --dynamic-base-4: var(--color-bone-faint);
+  --dynamic-base-5: var(--color-bone-dim);
+
+  /* Text */
+  --dynamic-text-primary: var(--color-bone);
+  --dynamic-text-secondary: var(--color-bone-dim);
+  --dynamic-text-tertiary: var(--color-bone-faint);
+  --dynamic-text-link: var(--color-aureus-ink);
+
+  /* Brand */
+  --dynamic-brand-primary-color: var(--color-honos-gold);
+  --dynamic-brand-secondary-color: var(--color-aureus-ink);
+
+  /* Borders */
+  --dynamic-border-1: var(--color-border);
+  --dynamic-border-2: color-mix(in oklch, var(--color-bone) 12%, transparent);
+
+  /* Shadows — mint-tinted instead of black */
+  --dynamic-shadow-down-1: 0 1px 3px color-mix(in oklch, var(--color-aureus-ink) 12%, transparent);
+  --dynamic-shadow-down-2: 0 4px 12px color-mix(in oklch, var(--color-aureus-ink) 16%, transparent);
+  --dynamic-shadow-down-3: 0 8px 24px color-mix(in oklch, var(--color-aureus-ink) 22%, transparent);
+
+  /* Rounded corners + pill chips */
+  --dynamic-border-radius-default: 12px;
+  --dynamic-border-radius-pills: 999px;
+}
+
+/* Direct class overrides for the inline widget pill — gives extra defense
+   in case CSS vars don't penetrate the widget render. */
+.dynamic-widget-inline-controls,
+[class*="dynamic-widget-inline-controls"],
+[class*="dynamic-widget-card"] {
+  background: var(--color-raised) !important;
+  border: 1px solid var(--color-border) !important;
+  color: var(--color-bone) !important;
+  border-radius: 999px !important;
+}
+
+/* ============================================================
+   SkyOrb — show sun in light mode, moon+stars in dark mode.
+   Real day/night feel on island scenes (PulauMap + Arena).
+   ============================================================ */
+/* Bulletproof — hide BOTH by default, then show only the one that matches
+   the active theme. Beats specificity issues + missing data-theme states. */
+[data-sky="moon"], [data-sky="sun"] { display: none !important; }
+[data-theme="light"] [data-sky="sun"]  { display: block !important; }
+[data-theme="dark"]  [data-sky="moon"] { display: block !important; }
+
+@keyframes sun-rotate {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes twinkle {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.55; }
+}
+
+/* ============================================================
+   Mobile responsive — sub-720px polish pass. The app is laptop-first
+   (judge demo, Discord testers), but mobile shouldn't look broken.
+   These rules target attribute-based selectors so they don't conflict
+   with the heavily inline-styled scene components.
+   ============================================================ */
+@media (max-width: 720px) {
+  /* Float chrome shrinks + sits inside safe insets */
+  [aria-label^="Open island map"] {
+    top: 10px !important;
+    left: 10px !important;
+    padding: 6px 10px 6px 6px !important;
+    font-size: 10px !important;
+  }
+  [aria-label^="Open island map"] svg {
+    width: 22px !important;
+    height: 22px !important;
+  }
+  [aria-label="Island navigation"] {
+    top: 10px !important;
+    left: 10px !important;
+    right: 10px !important;
+    width: auto !important;
+    max-width: calc(100vw - 20px) !important;
+  }
+
+  /* PulauMap absolute location buttons collapse to a vertical stack on
+     small screens. The wrapper is identified by data-pulau-map="root".
+     Cards keep their styling but live in a column instead of x/y %. */
+  [data-pulau-map="root"] {
+    aspect-ratio: auto !important;
+    min-height: 0 !important;
+    padding: 96px 16px 24px !important;
+  }
+  [data-pulau-map="root"] [data-pulau-map="locations"] {
+    position: static !important;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 12px !important;
+    inset: auto !important;
+  }
+  [data-pulau-map="root"] [data-pulau-map="location"] {
+    position: static !important;
+    inset: auto !important;
+    left: auto !important;
+    top: auto !important;
+    transform: none !important;
+    width: 100% !important;
+  }
+  [data-pulau-map="root"] [data-pulau-map="decor"] {
+    display: none !important;
+  }
+
+  /* Main content blocks get extra top padding so they clear the floating
+     Minimap pill without needing per-page changes. */
+  main {
+    padding-top: 64px !important;
+  }
+
+  /* Marketplace / Beach / Console grids collapse to single column */
+  [data-grid="responsive"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Hero headlines shrink */
+  h1 {
+    font-size: clamp(22px, 8vw, 34px) !important;
+  }
+}
