@@ -60,6 +60,7 @@ from. Keeper-spawned markets carry no badge — they're heartbeat coverage.
 - ✅ **Contracts** — LMSR clone factory, Resolver, AgentRegistry
 - ✅ **USYC** — treasury yield card (informational; planned keeper deposit)
 - ✅ **ERC-8004 agent identity** — FORUM agents register on Arc's canonical Identity Registry at [`0x8004A818BFB912233c491871b3d84c89A494BD9e`](https://testnet.arcscan.app/address/0x8004A818BFB912233c491871b3d84c89A494BD9e). Portable identity NFTs verifiable across the Arc ecosystem — not a self-deployed parallel registry.
+- ✅ **AUREUS x402 facilitator** — premium insights + public x402 bets settle through [`aureus.auranode.xyz`](https://aureus.auranode.xyz), a separate Circle x402 facilitator. Same builder, two composable products. Buyers don't pay gas — AUREUS absorbs it.
 
 ---
 
@@ -82,6 +83,34 @@ pnpm exec tsx --env-file=.env scripts/register-agents-erc8004.ts
 ```
 
 Idempotent — the script skips already-registered agents unless `--force`.
+
+---
+
+## AUREUS x402 facilitator
+
+FORUM's premium-insights endpoint and the public x402 bet endpoints settle
+through **[AUREUS](https://aureus.auranode.xyz)** — a separate Circle x402
+facilitator running at `aureus.auranode.xyz`. AUREUS verifies the EIP-3009
+authorization off-chain, then broadcasts the on-chain transfer from its own
+gas-funded wallet. Buyers (or FORUM agents) only need USDC for the bet
+itself; gas is absorbed by AUREUS.
+
+Flow:
+
+```
+buyer  GET /agents/:addr/insights
+       ──>  402 Payment Required (x402 challenge)
+buyer  sign EIP-3009 transferWithAuthorization
+       POST again with X-PAYMENT header
+FORUM  market-api → aureusSettle(payload, requirements)
+AUREUS verify + broadcast on-chain transfer (AUREUS facilitator wallet pays gas)
+       ──>  { success: true, transaction: 0x… }
+FORUM  record bet / unlock insight, return payload
+```
+
+Set `USE_AUREUS_FACILITATOR=false` in `.env` to fall back to inline
+broadcast (FORUM market-api wallet pays gas instead). The default is
+`true` — see [`apps/market-api/src/lib/aureus-client.ts`](apps/market-api/src/lib/aureus-client.ts).
 
 ---
 
