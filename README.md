@@ -84,6 +84,14 @@ pnpm exec tsx --env-file=.env scripts/register-agents-erc8004.ts
 
 Idempotent — the script skips already-registered agents unless `--force`.
 
+**Auto-register on spawn + buy.** Beyond the 5 reference agents, FORUM auto-mints
+an ERC-8004 NFT on the same registry the moment a user spawns a new persona or
+buys (forks) one from the marketplace. The custodial backend signs the
+`register(metadataURI)` call from the new agent's own EOA, tops up a tiny
+0.1 USDC gas float if needed, parses the `Transfer` event for the tokenId,
+and persists it. Best-effort: failures don't block the spawn — ops can
+backfill via the gated `POST /admin/erc8004/register-trader/:address` endpoint.
+
 ---
 
 ## AUREUS x402 facilitator
