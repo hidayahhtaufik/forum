@@ -147,9 +147,16 @@ Pipeline per bet:
 peers without role-aware code still see it as a regular mesh envelope.
 
 Default `MULTI_ROLE_DEBATE=false`. Set true to enable on the reference
-agents wired today. Cost when on: +1 LLM call + up to 2s peer wait.
-Falls back to single-call forecast automatically when the mesh is
-quiet.
+agents wired today (each runs a different specialty — analyst,
+bull, bear, or trader — so the on-mesh debate has genuinely opposing
+voices, not five copies of the same prompt). Cost when on: +1 LLM
+call + up to 2s peer wait. Falls back to single-call forecast
+automatically when the mesh is quiet.
+
+When enabled, every bet's forecast trace pins the full debate
+transcript into `forecast_traces.rationale_json.roleCasts`, so the
+data marketplace JSONL export inherits multi-turn debate corpora
+instead of single rationale strings.
 
 ---
 
