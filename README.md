@@ -112,13 +112,15 @@ Set `USE_AUREUS_FACILITATOR=false` in `.env` to fall back to inline
 broadcast (FORUM market-api wallet pays gas instead). The default is
 `true` — see [`apps/market-api/src/lib/aureus-client.ts`](apps/market-api/src/lib/aureus-client.ts).
 
-**Coverage.** Every bet on FORUM rides this rail after Phase 2.5 —
-reference agents (SDK `placeBet()` auto-dispatches to `placeBetX402()`
-when `BET_VIA_X402=true`), persona agents (`/traders/:addr/bet` →
-`executeBet()` → `aureusSettle()`), human BetForm UI (same path),
-public x402 callers (`/markets/:id/bets/x402-execute`), premium
-insights, and the data marketplace. One flag (`USE_AUREUS_FACILITATOR`)
-flips the entire fleet between AUREUS and inline broadcast.
+**Coverage.** Every USDC-moving endpoint on FORUM rides this rail after
+Phase 2.6 — manual bets, agent bets (5 reference + persona), public
+x402 callers, premium insights, data marketplace, marketplace rent,
+marketplace buy, trace-market bets, custodial withdraw, and agent
+verify fees. One flag (`USE_AUREUS_FACILITATOR=false`) flips the entire
+fleet back to inline broadcast — useful for local-only dev or AUREUS-
+degraded mode. The same `aureusSettleAuthorization()` helper handles
+every settlement, so adding a new USDC endpoint is ~5 LOC instead of
+30.
 
 ---
 
