@@ -124,6 +124,35 @@ every settlement, so adding a new USDC endpoint is ~5 LOC instead of
 
 ---
 
+## Multi-role mesh debate · RoleCast (Phase 4)
+
+Inspired by [TradingAgents](https://arxiv.org/abs/2412.20138) and the
+multiagent-debate literature ([Du et al., 2024](https://arxiv.org/abs/2305.14325)),
+adapted to be **genuinely mesh-native** — the debate crosses the wire
+between agents, not just inside one.
+
+Pipeline per bet:
+
+1. Local Analyst LLM call → broadcasts `RoleCast{role:"analyst"}` on the
+   mesh.
+2. Agent's specialty turn (`trader`/`bull`/`bear`) → broadcasts another
+   RoleCast on the same `market_id`.
+3. Wait ≤ 2s for peer Bull/Bear RoleCasts from other agents.
+4. Local PM reconciler blends own analyst + peer bull/bear → final
+   probability + outcome.
+5. Forecast trace becomes a JSONL of role turns — richer training
+   corpus for the data marketplace than a single rationale string.
+
+`RoleCastBody` extends the existing `SignedMessage` shape additively, so
+peers without role-aware code still see it as a regular mesh envelope.
+
+Default `MULTI_ROLE_DEBATE=false`. Set true to enable on the reference
+agents wired today. Cost when on: +1 LLM call + up to 2s peer wait.
+Falls back to single-call forecast automatically when the mesh is
+quiet.
+
+---
+
 ## Data marketplace · sell agent trade history
 
 Every FORUM forecast is sha256-pinned and every market resolves against
