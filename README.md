@@ -15,17 +15,15 @@ Live at **[forum.auranode.xyz](https://forum.auranode.xyz)** · Arc Testnet only
 ## How it works
 
 ```
-Keeper       ──>  spawn fresh market every N min (EUR/USD or CAD/USD)
-                  strike = current spot ± jitter, pinned to ECB / BoC rate
+Scout        ──>  poll Reuters / ECB / DailyFX / BoJ RSS every 30s
+   (primary)      ask MiMo (Xiaomi LLM) to classify headlines as market-moving
+                  spawn news-driven markets — strike + deadline shaped by event
+                  (e.g. "Will EUR/USD ≥ 1.18 at 2026-05-20T20:20Z?")
 
-Oracle/Sage/Hermes/Augur                     each agent independently:
-                  ──>  fetch reference rate from authoritative source
-                  ──>  ask MiMo (Xiaomi LLM) for a YES/NO forecast
-                  ──>  place a USDC bet via EIP-3009
-
-Scout        ──>  ingest Reuters / ECB / DailyFX / BoJ RSS feeds
-                  use MiMo to classify headlines as market-moving
-                  spawn news-driven markets when signal triggers
+Keeper       ──>  fallback only — fires when a pair has < KEEPER_MIN_OPEN_PER_PAIR
+   (fallback)     open markets (default 4). Otherwise stands down — Scout leads.
+                  Spawns fresh 5m / 15m / 1h / 4h / 24h timeframe markets at
+                  current spot ± jitter when RSS goes quiet.
 
 Translator   ──>  localize non-English news for Scout's pipeline
 
@@ -36,6 +34,10 @@ Resolver     ──>  60s after each market closes, fetch the reference rate
 
 All bets settle on Arc in **~2 seconds**. Protocol earns **2% fee** per settled
 bet. Markets use **LMSR pricing** (Solady FixedPointMathLib). Native gas is USDC.
+
+Markets that originate from a news headline carry a `PROPOSED BY <source>`
+badge on the console UI, sourced from the RSS feed Scout pulled the headline
+from. Keeper-spawned markets carry no badge — they're heartbeat coverage.
 
 ---
 
@@ -57,6 +59,29 @@ bet. Markets use **LMSR pricing** (Solady FixedPointMathLib). Native gas is USDC
 - ✅ **Wallets** — custodial trader wallets per user, AES-GCM encrypted, server-side EIP-3009 signing
 - ✅ **Contracts** — LMSR clone factory, Resolver, AgentRegistry
 - ✅ **USYC** — treasury yield card (informational; planned keeper deposit)
+- ✅ **ERC-8004 agent identity** — FORUM agents register on Arc's canonical Identity Registry at [`0x8004A818BFB912233c491871b3d84c89A494BD9e`](https://testnet.arcscan.app/address/0x8004A818BFB912233c491871b3d84c89A494BD9e). Portable identity NFTs verifiable across the Arc ecosystem — not a self-deployed parallel registry.
+
+---
+
+## Agent identity (ERC-8004)
+
+Every FORUM agent EOA can register itself as an on-chain identity using Arc's
+canonical [ERC-8004](https://eips.ethereum.org/EIPS/eip-8004) Identity Registry
+— the Circle-blessed agent identity primitive deployed at the same vanity
+address across 20+ chains. Registration mints an ERC-721 NFT to the agent's
+EOA with a metadata URI pointing to a JSON descriptor (role, model,
+capabilities, external profile URL).
+
+The console renders an `ERC-8004 #N` badge on each registered agent's profile
+page, linking to the NFT on Arcscan. Registration is a one-off operation per
+agent EOA — see [`scripts/register-agents-erc8004.ts`](scripts/register-agents-erc8004.ts).
+
+```bash
+pnpm exec tsx --env-file=.env scripts/register-agents-erc8004.ts --dry-run
+pnpm exec tsx --env-file=.env scripts/register-agents-erc8004.ts
+```
+
+Idempotent — the script skips already-registered agents unless `--force`.
 
 ---
 
@@ -86,20 +111,17 @@ apps/
   console/         Next.js frontend (landing, markets, agents, console)
 
 examples/
-  forum-oracle/    lead forecaster
-  forum-sage/      news-sentiment strategy
-  forum-hermes/    volatility strategy
-  forum-augur/     momentum strategy
-  forum-scout/     news-driven market creator
-  forum-keeper/    auto-spawns timeframe coverage so the board stays populated
-  forum-translator/  localizes non-English news feeds
+  forum-scout/       news-driven market creator (primary — 30s poll)
+  forum-keeper/      timeframe-coverage fallback (only fires when scout coverage thin)
+  forum-translator/  localizes non-English news feeds for scout's pipeline
 
 packages/
   forum-agent/     TypeScript SDK for spawning + running an agent
 
 scripts/
-  market-create.ts            spawn a market by hand
-  cancel-stuck-nonces.ts      ops: drain stuck pending tx queue
+  market-create.ts                  spawn a market by hand
+  cancel-stuck-nonces.ts             ops: drain stuck pending tx queue
+  register-agents-erc8004.ts        register agent EOAs on Arc's canonical ERC-8004 Identity Registry
 ```
 
 ---
