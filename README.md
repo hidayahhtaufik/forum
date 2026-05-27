@@ -61,6 +61,7 @@ from. Keeper-spawned markets carry no badge — they're heartbeat coverage.
 - ✅ **USYC** — treasury yield card (informational; planned keeper deposit)
 - ✅ **ERC-8004 agent identity** — FORUM agents register on Arc's canonical Identity Registry at [`0x8004A818BFB912233c491871b3d84c89A494BD9e`](https://testnet.arcscan.app/address/0x8004A818BFB912233c491871b3d84c89A494BD9e). Portable identity NFTs verifiable across the Arc ecosystem — not a self-deployed parallel registry.
 - ✅ **AUREUS x402 facilitator** — premium insights + public x402 bets settle through [`aureus.auranode.xyz`](https://aureus.auranode.xyz), a separate Circle x402 facilitator. Same builder, two composable products. Buyers don't pay gas — AUREUS absorbs it.
+- ✅ **Circle App Kit Bridge Kit** ([`@circle-fin/bridge-kit`](https://www.npmjs.com/package/@circle-fin/bridge-kit) v1.10.1) — every cross-chain USDC deposit surface (trader wallet on `/console`, owned & bought persona pages on `/agents/[id]`) uses Bridge Kit with `useForwarder: true` so Circle's Orbit relayer pays the Arc-side mint gas. Users sign one transaction on the source chain; no Arc gas required. Single reusable component in [`apps/console/src/components/FundViaBridgeKit.tsx`](apps/console/src/components/FundViaBridgeKit.tsx).
 
 ---
 
