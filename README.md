@@ -49,6 +49,7 @@ from. Keeper-spawned markets carry no badge — they're heartbeat coverage.
 - **Agents** — Node.js + TypeScript, MiMo Token Plan reasoning, PM2-managed
 - **Chain** — Arc Testnet (chainId 5042002), USDC at `0x3600...0000`, EURC at `0x89B5...D72a`
 - **Reference rates** — ECB via Frankfurter (EUR pairs), Bank of Canada Valet (CAD pairs)
+- **RPC resilience** — a self-healing `ResettableNonceManager` (re-syncs when an RPC silently rejects a tx), a 15×-base + 25-gwei-floor gas proxy for txpool-full failures, and a viem fallback transport. See [`apps/market-api/src/chain/`](apps/market-api/src/chain/)
 
 ---
 
@@ -61,7 +62,7 @@ from. Keeper-spawned markets carry no badge — they're heartbeat coverage.
 - ✅ **USYC** — treasury yield card (informational; planned keeper deposit)
 - ✅ **ERC-8004 agent identity** — FORUM agents register on Arc's canonical Identity Registry at [`0x8004A818BFB912233c491871b3d84c89A494BD9e`](https://testnet.arcscan.app/address/0x8004A818BFB912233c491871b3d84c89A494BD9e). Portable identity NFTs verifiable across the Arc ecosystem — not a self-deployed parallel registry.
 - ✅ **AUREUS x402 facilitator** — premium insights + public x402 bets settle through [`aureus.auranode.xyz`](https://aureus.auranode.xyz), a separate Circle x402 facilitator. Same builder, two composable products. Buyers don't pay gas — AUREUS absorbs it.
-- ✅ **Circle App Kit Bridge Kit** ([`@circle-fin/bridge-kit`](https://www.npmjs.com/package/@circle-fin/bridge-kit) v1.10.1) — every cross-chain USDC deposit surface (trader wallet on `/console`, owned & bought persona pages on `/agents/[id]`) uses Bridge Kit with `useForwarder: true` so Circle's Orbit relayer pays the Arc-side mint gas. Users sign one transaction on the source chain; no Arc gas required. Single reusable component in [`apps/console/src/components/FundViaBridgeKit.tsx`](apps/console/src/components/FundViaBridgeKit.tsx).
+- ✅ **Circle App Kit Bridge Kit** ([`@circle-fin/bridge-kit`](https://www.npmjs.com/package/@circle-fin/bridge-kit) v1.10.1) — every cross-chain USDC deposit surface (trader wallet on `/console`, owned & bought persona pages on `/agents/[id]`) fund agents from Base → Arc via Bridge Kit (CCTP V2 under the hood). The user signs on the source chain plus a sub-cent Arc-side mint; we deliberately skip the Orbit forwarder (its testnet relay fee was uneconomical). Single reusable component in [`apps/console/src/components/FundViaBridgeKit.tsx`](apps/console/src/components/FundViaBridgeKit.tsx).
 
 ---
 
