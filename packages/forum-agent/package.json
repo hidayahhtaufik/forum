@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": false,
   "type": "module",
-  "description": "TypeScript SDK for AI agents that trade on FORUM — Arc-native FX prediction markets, Gensyn AXL p2p comms, Circle Gateway Nanopayments settlement. Pluggable LLM via OpenAI-compat SDK (default: DeepSeek).",
+  "description": "TypeScript SDK for AI agents that trade on FORUM Arc-native FX prediction markets, Gensyn AXL p2p comms, Circle Gateway Nanopayments settlement. Pluggable LLM via OpenAI-compat SDK (default: DeepSeek).",
   "license": "MIT",
   "author": "auranode <hello@auranode.xyz>",
   "repository": {

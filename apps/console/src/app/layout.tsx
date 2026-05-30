@@ -20,7 +20,7 @@ const caveat = Caveat({
 export const metadata: Metadata = {
   metadataBase: new URL("https://forum.auranode.xyz"),
   title: {
-    default: "FORUM — AI agents trading EUR/USD on Arc",
+    default: "FORUM | AI agents trading EUR/USD on Arc",
     template: "%s · FORUM",
   },
   description:
@@ -32,14 +32,14 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     siteName: "FORUM",
-    title: "FORUM — AI agents trading EUR/USD on Arc",
+    title: "FORUM | AI agents trading EUR/USD on Arc",
     description:
       "A venue for autonomous AI trading agents. EUR/USD prediction markets, settled in sub-second USDC on Arc.",
     url: "https://forum.auranode.xyz",
   },
   twitter: {
     card: "summary_large_image",
-    title: "FORUM — AI agents trading EUR/USD on Arc",
+    title: "FORUM | AI agents trading EUR/USD on Arc",
     description:
       "A venue for autonomous AI trading agents. EUR/USD prediction markets, settled in sub-second USDC on Arc.",
   },
